@@ -1,71 +1,182 @@
-##---loading_data-------------------------------------------
-library("data.table")
-library(ggplot2)
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Reproducible Research: Peer Assessment 1},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
 
-fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
-download.file(fileUrl, destfile = paste0(getwd(), '/repdata%2Fdata%2Factivity.zip'), method = "curl")
-unzip("repdata%2Fdata%2Factivity.zip",exdir = "data")
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
 
-##---reading_data-------------------------------------------
-activityDT <- data.table::fread(input = "data/activity.csv")
+%%% Change title format to be more compact
+\usepackage{titling}
 
-##---total_no_of_steps--------------------------------------
-#-----------------------------------------------------------
-Total_Steps <- activityDT[, c(lapply(.SD, sum, na.rm = FALSE)), .SDcols = c("steps"), by = .(date)] 
-head(Total_Steps, 10)
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
 
-#-----------------------------------------------------------
-ggplot(Total_Steps, aes(x = steps)) +
-    geom_histogram(fill = "blue", binwidth = 1000) +
-    labs(title = "Daily Steps", x = "Steps", y = "Frequency")
-    
-#-----------------------------------------------------------
-Total_Steps[, .(Mean_Steps = mean(steps, na.rm = TRUE), Median_Steps = median(steps, na.rm = TRUE))]
-    
-##---avg_daily_activity_pattern-----------------------------
-#-----------------------------------------------------------
-IntervalDT <- activityDT[, c(lapply(.SD, mean, na.rm = TRUE)), .SDcols = c("steps"), by = .(interval)] 
-ggplot(IntervalDT, aes(x = interval , y = steps)) + geom_line(color="blue", size=1) + labs(title = "Avg. Daily Steps", x = "Interval", y = "Avg. Steps per day")
-
-#-----------------------------------------------------------
-IntervalDT[steps == max(steps), .(max_interval = interval)]
-
-##---missing_values-----------------------------------------
-#-----------------------------------------------------------
-activityDT[is.na(steps), .N ]
-
-# alternative solution
-nrow(activityDT[is.na(steps),])
-
-#-----------------------------------------------------------
-activityDT[is.na(steps), "steps"] <- activityDT[, c(lapply(.SD, median, na.rm = TRUE)), .SDcols = c("steps")]
-
-#-----------------------------------------------------------
-data.table::fwrite(x = activityDT, file = "data/tidyData.csv", quote = FALSE)
-
-#-----------------------------------------------------------
-# total number of steps taken per day
-Total_Steps <- activityDT[, c(lapply(.SD, sum)), .SDcols = c("steps"), by = .(date)] 
-
-# mean and median total number of steps taken per day
-Total_Steps[, .(Mean_Steps = mean(steps), Median_Steps = median(steps))]
-
-ggplot(Total_Steps, aes(x = steps)) + geom_histogram(fill = "blue", binwidth = 1000) + labs(title = "Daily Steps", x = "Steps", y = "Frequency")
-
-##---difference_in_activity_patterns------------------------
-# Just recreating activityDT from scratch then making the new factor variable. (No need to, just want to be clear on what the entire process is.) 
-
-activityDT <- data.table::fread(input = "data/activity.csv")
-activityDT[, date := as.POSIXct(date, format = "%Y-%m-%d")]
-activityDT[, `Day of Week`:= weekdays(x = date)]
-activityDT[grepl(pattern = "Monday|Tuesday|Wednesday|Thursday|Friday", x = `Day of Week`), "weekday or weekend"] <- "weekday"
-activityDT[grepl(pattern = "Saturday|Sunday", x = `Day of Week`), "weekday or weekend"] <- "weekend"
-activityDT[, `weekday or weekend` := as.factor(`weekday or weekend`)]
-head(activityDT, 10)
-
-#-----------------------------------------------------------
-activityDT[is.na(steps), "steps"] <- activityDT[, c(lapply(.SD, median, na.rm = TRUE)), .SDcols = c("steps")]
-IntervalDT <- activityDT[, c(lapply(.SD, mean, na.rm = TRUE)), .SDcols = c("steps"), by = .(interval, `weekday or weekend`)] 
-ggplot(IntervalDT , aes(x = interval , y = steps, color=`weekday or weekend`)) + geom_line() + labs(title = "Avg. Daily Steps by Weektype", x = "Interval", y = "No. of Steps") + facet_wrap(~`weekday or weekend` , ncol = 1, nrow=2)
+\setlength{\droptitle}{-2em}
+  \title{Reproducible Research: Peer Assessment 1}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{}
+  \preauthor{}\postauthor{}
+  \date{}
+  \predate{}\postdate{}
 
 
+\begin{document}
+\maketitle
+
+\subsection{Loading and preprocessing the
+data}\label{loading-and-preprocessing-the-data}
+
+First we load the required data to perform the analysis:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rawStepDataSet <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"activity.csv"}\NormalTok{)}
+\NormalTok{filteredStepDataSet <-}\StringTok{ }\NormalTok{rawStepDataSet[}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(rawStepDataSet}\OperatorTok{$}\NormalTok{steps),]}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{What is mean total number of steps taken per
+day?}\label{what-is-mean-total-number-of-steps-taken-per-day}
+
+In this section we proceed to calculate the total steps taken per day
+considering only the processed data after discarding the NA samples.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Obtain the distinct days of the filtered data set}
+\NormalTok{targetDays <-}\StringTok{ }\KeywordTok{unique}\NormalTok{(filteredStepDataSet}\OperatorTok{$}\NormalTok{date)}
+\NormalTok{resultData <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\StringTok{"Day"}\NormalTok{=}\KeywordTok{character}\NormalTok{(),}\StringTok{"TotalSteps"}\NormalTok{=}\KeywordTok{numeric}\NormalTok{(),}\DataTypeTok{stringsAsFactors =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{colnames}\NormalTok{(resultData) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Day"}\NormalTok{,}\StringTok{"Total.Steps"}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (targetDay }\ControlFlowTok{in}\NormalTok{ targetDays) \{}
+  \CommentTok{#Filter the data}
+\NormalTok{  currentDayData <-filteredStepDataSet[filteredStepDataSet}\OperatorTok{$}\NormalTok{date }\OperatorTok{==}\StringTok{ }\NormalTok{targetDay,]}
+  \CommentTok{#Get the current total of emissions on that year}
+\NormalTok{  currentStepsTotal <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(currentDayData}\OperatorTok{$}\NormalTok{steps)}
+\NormalTok{  newRow <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(targetDay,currentStepsTotal)}
+\NormalTok{  resultData <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(resultData,newRow) }
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{barplot}\NormalTok{(resultData}\OperatorTok{$}\NormalTok{currentStepsTotal,}\DataTypeTok{main =} \StringTok{"Total Steps per Day"}\NormalTok{,}\DataTypeTok{xlab =} \StringTok{"Date"}\NormalTok{,}\DataTypeTok{names.arg =} \KeywordTok{unique}\NormalTok{(resultData}\OperatorTok{$}\NormalTok{targetDay),}\DataTypeTok{ylab =} \StringTok{"Total Steps measured"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{PA1_template_files/figure-latex/figs-1.pdf} As it is
+illustrated in Figure \ref{fig:figs}.
+
+\subsection{What is the average daily activity
+pattern?}\label{what-is-the-average-daily-activity-pattern}
+
+\subsection{Imputing missing values}\label{imputing-missing-values}
+
+\subsection{Are there differences in activity patterns between weekdays
+and
+weekends?}\label{are-there-differences-in-activity-patterns-between-weekdays-and-weekends}
+
+
+\end{document}
